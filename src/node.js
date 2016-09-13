@@ -85,5 +85,5 @@ class Node {
 
 	}
 }
-if (typeof module != 'undefined')
+
 module.exports = Node;

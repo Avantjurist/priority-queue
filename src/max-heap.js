@@ -1,6 +1,5 @@
-if (typeof require != "undefined"){
 const Node = require('./node');
-}
+
 class MaxHeap {
 	constructor() {
 		this.root = null;
@@ -9,7 +8,6 @@ class MaxHeap {
 	}
 
 	push(data, priority) {
-		//console.log("!!!!!!!!!!!!",typeof Node=='undefined');
 		var newNode = new Node(data, priority);
 		this.insertNode(newNode);
 		this.shiftNodeUp(newNode);
@@ -48,18 +46,15 @@ class MaxHeap {
 			return;
 		}
 
-		//console.log("!!!!!!!!!!!", this.parentNodes);
 		var lastInsertedNode = this.parentNodes[this.parentNodes.length - 1];
 		this.root = lastInsertedNode;
-		//console.log("!!!!!!!!!!",this.root);
-		this.root.parent = null;
 
-		if (detached.left == lastInsertedNode) {
+		if (detached.left == lastInsertedNode || detached.left == null) {
 			this.root.left = null;
 		} else {
 			this.root.left = detached.left;
 		}
-		if (detached.right == lastInsertedNode) {
+		if (detached.right == lastInsertedNode || detached.right == null) {
 			this.root.right = null;
 		} else {
 			this.root.right = detached.right;
@@ -73,8 +68,16 @@ class MaxHeap {
 		if (this.root.right == null) {
 			this.parentNodes.unshift(lastInsertedNode);
 		}
-
 		this.parentNodes.pop();
+		if (lastInsertedNode.parent != null && lastInsertedNode.parent != detached && lastInsertedNode.parent.right == lastInsertedNode) {
+			this.parentNodes.unshift(lastInsertedNode.parent);
+			lastInsertedNode.parent.right = null;
+		}
+
+		if (lastInsertedNode.parent != null && lastInsertedNode.parent.left == lastInsertedNode) {
+			lastInsertedNode.parent.left = null;
+		}
+		this.root.parent = null;
 	}
 
 	size() {
@@ -101,7 +104,6 @@ class MaxHeap {
 			this.parentNodes.push(node);
 		} else {
 			this.parentNodes[0].appendChild(node);
-			//this.insertNode()
 			this.parentNodes.push(node);
 				if(this.parentNodes[0].right == node){
 				this.parentNodes.shift();
@@ -178,5 +180,5 @@ class MaxHeap {
 		}
 	}
 }
-if (typeof module != 'undefined')
+
 module.exports = MaxHeap;
